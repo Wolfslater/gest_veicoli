@@ -18,12 +18,11 @@ body {
 }
 
 .screen.active {
-    display: block;
+    display: flex;      /* Use flex for both login and dashboard screens */
 }
 
-/* Login Screen */
 #loginScreen {
-    display: flex;
+    /* DO NOT put display: flex here! */
     justify-content: center;
     align-items: center;
     min-height: 100vh;
