@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionale Veicoli - Associazione</title>
+    <link rel="stylesheet" href="Style/style.css">
+</head>
+<body>
+    <!-- Schermata di Login -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-form">
+                <h2>🚗 Gestionale Veicoli</h2>
+                <h3>Accesso Associazione</h3>
+                <form id="loginForm" novalidate class="validation-form">
+                    <div class="form-group">
+                        <input type="text" id="username" placeholder="Nome utente" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Accedi</button>
+                </form>
+                <div id="loginError" class="error-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboardScreen" class="screen">
+        <div class="dashboard">
+            <header class="header">
+                <div class="header-content">
+                    <h1>🚗 Gestionale Veicoli</h1>
+                    <div class="user-info">
+                        <span id="userWelcome" class="user-welcome"></span>
+                        <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <nav class="dashboard-nav">
+                <div class="nav-tabs">
+                    <button class="tab-btn active" data-tab="vehicles">Veicoli</button>
+                    <button class="tab-btn" data-tab="reservations">Prenotazioni</button>
+                    <button class="tab-btn admin-only" data-tab="users">Utenti</button>
+                </div>
+            </nav>
+
+            <main class="dashboard-content">
+                <!-- Tab Veicoli -->
+                <div id="vehiclesTab" class="tab-content active">
+                    <div class="section-header">
+                        <h2>Gestione Veicoli</h2>
+                        <button id="addVehicleBtn" class="btn btn-primary admin-only">+ Aggiungi Veicolo</button>
+                    </div>
+                    <div id="vehiclesGrid" class="vehicles-grid"></div>
+                </div>
+
+                <!-- Tab Prenotazioni -->
+                <div id="reservationsTab" class="tab-content">
+                    <div class="section-header">
+                        <h2>Le Mie Prenotazioni</h2>
+                    </div>
+                    <div id="reservationsList" class="reservations-list"></div>
+                </div>
+
+                <!-- Tab Utenti (Admin only) -->
+                <div id="usersTab" class="tab-content admin-only">
+                    <div class="section-header">
+                        <h2>Gestione Utenti</h2>
+                        <button id="addUserBtn" class="btn btn-primary">+ Aggiungi Utente</button>
+                    </div>
+                    <div id="usersList" class="users-list"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Prenotazione -->
+    <div id="reservationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalVehicleTitle">Prenota Veicolo</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="reservationForm">
+                    <div class="form-group">
+                        <label for="startDateTime">Data e ora inizio:</label>
+                        <input type="datetime-local" id="startDateTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endDateTime">Data e ora fine:</label>
+                        <input type="datetime-local" id="endDateTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationNotes">Note (opzionali):</label>
+                        <textarea id="reservationNotes" rows="3" placeholder="Inserisci eventuali note..."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancelReservation" class="btn btn-secondary">Annulla</button>
+                        <button type="submit" class="btn btn-primary">Conferma Prenotazione</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Aggiungi Veicolo -->
+    <div id="vehicleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aggiungi Nuovo Veicolo</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="vehicleForm">
+                    <div class="form-group">
+                        <label for="vehicleName">Nome veicolo:</label>
+                        <input type="text" id="vehicleName" required placeholder="es. Fiat Panda Blu">
+                    </div>
+                    <div class="form-group">
+                        <label for="vehiclePlate">Targa:</label>
+                        <input type="text" id="vehiclePlate" required placeholder="es. AB123CD">
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicleType">Tipo veicolo:</label>
+                        <select id="vehicleType" required>
+                            <option value="">Seleziona tipo</option>
+                            <option value="auto">Auto</option>
+                            <option value="furgone">Furgone</option>
+                            <option value="minibus">Minibus</option>
+                            <option value="moto">Moto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicleSeats">Numero posti:</label>
+                        <input type="number" id="vehicleSeats" required min="1" max="50">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancelVehicle" class="btn btn-secondary">Annulla</button>
+                        <button type="submit" class="btn btn-primary">Aggiungi Veicolo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Gestione Utente -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="userModalTitle">Gestione Utente</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label for="newUsername">Nome utente:</label>
+                        <input type="text" id="newUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Password:</label>
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fullName">Nome completo:</label>
+                        <input type="text" id="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="isAdmin">
+                            Amministratore
+                        </label>
+                    </div>
+                    <div class="permissions-section">
+                        <h4>Permessi:</h4>
+                        <label>
+                            <input type="checkbox" id="canReserve">
+                            Può effettuare prenotazioni
+                        </label>
+                        <label>
+                            <input type="checkbox" id="canViewAll">
+                            Può vedere tutte le prenotazioni
+                        </label>
+                        <label>
+                            <input type="checkbox" id="canManageVehicles">
+                            Può gestire i veicoli
+                        </label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancelUser" class="btn btn-secondary">Annulla</button>
+                        <button type="submit" class="btn btn-primary">Salva Utente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script/script.js"></script>
+</body>
+</html>
