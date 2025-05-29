@@ -141,7 +141,7 @@ function initializeApp() {
 function showScreen(screen) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     if (screen === 'login') {
-        loginScreen.classList.remove('active');
+        loginScreen.classList.add('active');
     } else if (screen === 'dashboard') {
         dashboardScreen.classList.add('active');
     }
